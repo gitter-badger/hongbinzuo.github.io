@@ -1,0 +1,218 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Scala patterns (#3) - Successor Value | Freelemon&#39;s open world</title>
+  <meta name="author" content="Hongbin Zuo">
+  
+  <meta name="description" content="Think before write.">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="Scala patterns (#3) - Successor Value"/>
+  <meta property="og:site_name" content="Freelemon&#39;s open world"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Freelemon&#39;s open world" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-45802564-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Freelemon&#39;s open world</a></h1>
+  <h2><a href="/">Write, Code, Share, Learn</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/about">About</a></li>
+    
+    <li> <a href="/atom.xml">RSS</a> </li>
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2014-03-02T03:25:27.000Z"><a href="/2014/03/02/scala-successor-value/">Mar 2 2014</a></time>
+      
+      
+  
+    <h1 class="title">Scala patterns (#3) - Successor Value</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>其实这个设计模式也不是Scala语言特有的，只是因为在<em>Scala in action</em>（下文中提到的书都是指本书）中提到，因此做一个小结。在书的第五章Functional Programming中讨论函数式编程的时候，谈到了纯函数式编程、面向对象编程和非纯函数式编程的一些特点。Scala是一门杂糅的编程语言，它不是纯函数式语言，这样就涉及到一个问题：如何尽量多地使用它的函数式特性，同时避免或者减少对于对象状态的改变。作者在这时举了一个小例子，就是Successor Value模式（书中也叫Functional Object模式，但是没有查到相关资料）。</p>
+<a id="more"></a>
+
+<p>非常遗憾的是，作者引用Object Mentor的一篇关于Successor Value的原始博文已经失效（<a href="mng.bz/b27e">地址</a>），所以我们不知道原来Michael Feathers是怎么详细定义这个模式的。但是从书中的例子可以基本了解这个模式的思路，和Java中的String可以类比，主要达到的目的是不改变原有对象的状态而是通过某种方式创建一个新的对象。下面把书中的例子摘录如下：</p>
+<p><strong>可变的Square对象定义</strong>：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Square</span><span class="params">(var side: Int)</span> </span>{</div><div class="line">  <span class="keyword">def</span> area = side * side</div><div class="line">}</div></pre></td></tr></table></figure>
+
+<p><strong>不可变的Square定义</strong>：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="type">PureSquare</span><span class="container">(<span class="title">val</span> <span class="title">side</span>: <span class="type">Int</span>)</span> {</span></div><div class="line">  def newSide<span class="container">(<span class="title">s</span>: <span class="type">Int</span>)</span>: <span class="type">PureSquare</span> = new <span class="type">PureSquare</span><span class="container">(<span class="title">s</span>)</span></div><div class="line">  def area = side * side</div><div class="line">}</div></pre></td></tr></table></figure>
+
+<p>在PureSquare类的定义中，side是val参数，所以新创建的对象是不可变的，通过新定义的newSide方法，如果想调用已有对象改变side的话，那就返回一个新建的PureSquare对象。我们借用<a href="http://stackoverflow.com/questions/18999709/what-is-successor-value-pattern" target="_blank" rel="external">Stackoverflow问答中的例子</a>来进一步理解一下：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">val</span> square1 = <span class="keyword">new</span> PureSquare(<span class="number">1</span>)</div><div class="line"><span class="keyword">assert</span>(square1.area == <span class="number">1</span>)</div><div class="line"></div><div class="line"><span class="comment">//this is similar to changing the side of square1</span></div><div class="line"><span class="keyword">val</span> square2 = square1.newSide(<span class="number">2</span>)</div><div class="line"></div><div class="line"><span class="comment">//and the area changes consequently</span></div><div class="line"><span class="keyword">assert</span>(square2.area == <span class="number">4</span>)</div><div class="line"><span class="comment">//while the original call is still referentially transparent [*]</span></div><div class="line"><span class="keyword">assert</span>(square1.area == <span class="number">1</span>)</div></pre></td></tr></table></figure>
+
+<p>这应该不是面向对象编程中常用的一个模式，但是可能在Scala编程中会用的到。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+  
+  <div class="tags">
+    <a href="/tags/Scala/">Scala</a>, <a href="/tags/Design-Patterns/">Design Patterns</a>
+  </div>
+
+        <div class="bdsharebuttonbox"><a href="#" class="bds_more" data-cmd="more"></a><a href="#" class="bds_qzone" data-cmd="qzone"></a><a href="#" class="bds_tsina" data-cmd="tsina"></a><a href="#" class="bds_tqq" data-cmd="tqq"></a><a href="#" class="bds_renren" data-cmd="renren"></a><a href="#" class="bds_weixin" data-cmd="weixin"></a></div>
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdPic":"","bdStyle":"0","bdSize":"16"},"share":{},"image":{"viewList":["qzone","tsina","tqq","renren","weixin"],"viewText":"分享到：","viewSize":"16"},"selectShare":{"bdContainerClass":null,"bdSelectMiniList":["qzone","tsina","tqq","renren","weixin"]}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+<section id="comment">
+
+<!-- Duoshuo Comment BEGIN -->
+	<div class="ds-thread"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"freelemon"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- Duoshuo Comment END -->
+
+</section>
+
+
+
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="Search">
+    <input type="hidden" name="q" value="site:hongbinzuo.github.io">
+  </form>
+</div>
+
+  
+
+  
+<div class="widget tagcloud">
+  <h3 class="title">Tag Cloud</h3>
+  <div class="entry">
+    <a href="/tags/Concurrency/" style="font-size: 10.00px;">Concurrency</a><a href="/tags/DI/" style="font-size: 11.67px;">DI</a><a href="/tags/Design-Patterns/" style="font-size: 16.67px;">Design Patterns</a><a href="/tags/Emacs/" style="font-size: 10.00px;">Emacs</a><a href="/tags/FP/" style="font-size: 10.00px;">FP</a><a href="/tags/Gradle/" style="font-size: 10.00px;">Gradle</a><a href="/tags/Groovy/" style="font-size: 10.00px;">Groovy</a><a href="/tags/IoC/" style="font-size: 10.00px;">IoC</a><a href="/tags/Java/" style="font-size: 18.33px;">Java</a><a href="/tags/Javascript/" style="font-size: 10.00px;">Javascript</a><a href="/tags/Misc/" style="font-size: 10.00px;">Misc</a><a href="/tags/Ruby/" style="font-size: 10.00px;">Ruby</a><a href="/tags/SBT/" style="font-size: 11.67px;">SBT</a><a href="/tags/Scala/" style="font-size: 20.00px;">Scala</a><a href="/tags/Spring/" style="font-size: 10.00px;">Spring</a><a href="/tags/algorithms/" style="font-size: 10.00px;">algorithms</a><a href="/tags/appfuse/" style="font-size: 11.67px;">appfuse</a><a href="/tags/blog/" style="font-size: 10.00px;">blog</a><a href="/tags/email/" style="font-size: 10.00px;">email</a><a href="/tags/favorites/" style="font-size: 10.00px;">favorites</a><a href="/tags/github/" style="font-size: 10.00px;">github</a><a href="/tags/grails/" style="font-size: 13.33px;">grails</a><a href="/tags/hexo/" style="font-size: 11.67px;">hexo</a><a href="/tags/maven/" style="font-size: 10.00px;">maven</a><a href="/tags/nodejs/" style="font-size: 10.00px;">nodejs</a><a href="/tags/play!/" style="font-size: 10.00px;">play!</a><a href="/tags/reading/" style="font-size: 15.00px;">reading</a><a href="/tags/test/" style="font-size: 11.67px;">test</a>
+  </div>
+</div>
+
+
+  <iframe width="100%" height="550" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=550&fansRow=2&ptype=1&speed=0&skin=1&isTitle=1&noborder=1&isWeibo=1&isFans=1&uid=1734417403&verifier=faa09416&dpc=1"></iframe>
+
+
+  <div class="widget tag">
+<h3 class="title">友情链接</h3>
+<ul class="entry">
+<li><a href="http://zipperary.com/" title="Zippera's Blog">Hexo作者博客</a></li>
+<li><a href="http://blog.csdn.net/happydeer/" title="陆其明的博客">豆巴陆其明</a></li>
+<li><a href="http://zhengyaotian.com/" title="Yaotian的博客">Yaotian</a></li>
+<li><a href="http://bobjiang.com/" title="Bob Jiang's Blog">Bob Jiang</a></li>
+<li><a href="http://youfei.github.io/" title="You fei's Blog">快乐的小伙伴儿</a></li>
+<li><a href="http://moonshadow778.github.io/" title="moonshadow">moonshadow778</a></li>
+</ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2014 Hongbin Zuo
+  
+  &nbsp;
+  <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1000271202'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/z_stat.php%3Fid%3D1000271202%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+<div class="clearfix"></div>
+
+
+</footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F017d48b7d485850445707f9e552bfde4' type='text/javascript'%3E%3C/script%3E"));
+</script>
+</body>
+</html>

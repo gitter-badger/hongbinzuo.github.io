@@ -1,0 +1,240 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>A quick web application with SBT | Freelemon&#39;s open world</title>
+  <meta name="author" content="Hongbin Zuo">
+  
+  <meta name="description" content="Think before write.">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="A quick web application with SBT"/>
+  <meta property="og:site_name" content="Freelemon&#39;s open world"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="Freelemon&#39;s open world" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-45802564-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Freelemon&#39;s open world</a></h1>
+  <h2><a href="/">Write, Code, Share, Learn</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/about">About</a></li>
+    
+    <li> <a href="/atom.xml">RSS</a> </li>
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+    <div class="gallery">
+  <div class="photoset">
+    
+      <img src="">
+    
+  </div>
+  <div class="control">
+    <div class="prev"></div>
+    <div class="next"></div>
+  </div>
+</div>
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2014-03-19T11:18:01.000Z"><a href="/2014/03/19/a-quick-web-application-with-sbt/">Mar 19 2014</a></time>
+      
+      
+  
+    <h1 class="title">A quick web application with SBT</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>In the chapter 6 of <em>Scala in action</em>, the author decides to show something concrete. The example is a web application that provide Kanban service. It’s called <strong>weKanban</strong>. In order to get this example to run, there’s something to do for project setup, Scala web development and database development and so on. Here I would like to briefly describe the procedure to get it working for current environment, because some libraries used by the example are outdated in the book.</p>
+<a id="more"></a>
+
+<p>The very first thing is sbt. In the previous example, the HTTP client sample, I did not follow the instruction to setup SBT(Simple Build Tool). Instead, I used Gradle and its jetty plugin. If this time I still insist on Gradle, then I may encounter some unexpected problem, so I have to turn the build tool to SBT to make it easy. Anyway, I need to learn SBT gradully, after all, SBT is the first choice for Scala programming.</p>
+<p>The first step is to create the project skeleton for weKanban. This step really took me some time, and I think it is a bad idea to remove the support for project template since after SBT version 0.7, because none of the alternative ways is easy. There are actually three ways mentioned in <em>Scala in action</em>, one is <strong>np</strong>, one is <strong>giter8</strong>, and the last one is command. I tried them one by one and tried to fix the problems, but at last, I lost my patience and created the directory mannually. giter8 is still hard to setup, it requires <strong>conscript</strong> first and this conscript didn’t work after many attempts.. Even at last I installed it correctly, giter8 still cannot get the project template correctly. Although the author said giter8 nearly becomes the standard way to create Scala projects, I dont like it. </p>
+<p>So, I end up with creating the project structure by hand. It looks like below,</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">bash-<span class="number">3.2</span>$ tree .</div><div class="line">.</div><div class="line">├── build.sbt</div><div class="line">├── lib</div><div class="line">├── project</div><div class="line">│   ├── build.properties</div><div class="line">│   ├── build.scala</div><div class="line">│   ├── plugins.sbt</div><div class="line">│   ├── project</div><div class="line">│   │   └── target</div><div class="line">│   └── target</div><div class="line">├── src</div><div class="line">│   ├── main</div><div class="line">│   │   ├── java</div><div class="line">│   │   ├── resourcs</div><div class="line">│   │   ├── scala</div><div class="line">│   │   │   └── weKanban.scala</div><div class="line">│   │   └── webapp</div><div class="line">│   │       ├── WEB-<span class="built_in">INF</span></div><div class="line">│   │       │   ├── target</div><div class="line">│   │       │   └── web.xml</div><div class="line">│   │       ├── css</div><div class="line">│   │       ├── index.html</div><div class="line">│   │       └── <span class="keyword">js</span></div><div class="line">│   ├── target</div><div class="line">│   └── <span class="keyword">test</span></div><div class="line">│       ├── java</div><div class="line">│       ├── resources</div><div class="line">│       └── scala</div><div class="line">└── target</div></pre></td></tr></table></figure>
+
+<p>Note: all the directories named ‘target’ were genereated automatically by SBT, so dont create them manually.</p>
+<p>The second step is to make sure SBT has been installed correctly and it works well with required plugins and libraries,</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">bash-<span class="number">3.2</span>$ sbt</div><div class="line">[info] Loading <span class="keyword">project</span> definition <span class="keyword">from</span> <span class="regexp">/Users/</span>admin<span class="regexp">/Scala/</span>projects<span class="regexp">/weKanban/</span><span class="keyword">project</span></div><div class="line">[info] Set current <span class="keyword">project</span> to weKanban (in build <span class="keyword">file</span>:<span class="regexp">/Users/</span>admin<span class="regexp">/Scala/</span>projects<span class="regexp">/weKanban/</span>)</div><div class="line">&gt; sbt-version</div><div class="line">[info] <span class="number">0.13</span>.<span class="number">1</span></div><div class="line">&gt; scala-version</div><div class="line">[info] <span class="number">2.10</span>.<span class="number">3</span></div></pre></td></tr></table></figure>
+
+<p>The content of <em>build.sbt</em> is different from the original one in the book. It is shown as follows, the main difference is the Scala version, jetty’s dependency details and the xsbt webplugin path:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">name <span class="value">:= <span class="string">"weKanban"</span></span></div><div class="line"></div><div class="line">organization := <span class="string">"scalainaction"</span></div><div class="line"></div><div class="line">version := <span class="string">"0.1"</span></div><div class="line"></div><div class="line">scalaVersion := <span class="string">"2.10.0"</span></div><div class="line"></div><div class="line">scalacOptions ++= <span class="function">Seq</span>(<span class="string">"-unchecked"</span>, <span class="string">"-deprecation"</span>)</div><div class="line"></div><div class="line">libraryDependencies ++= <span class="function">Seq</span>(</div><div class="line">  <span class="string">"org.scalaz"</span> %% <span class="string">"scalaz-core"</span> % <span class="string">"6.0.3"</span>,</div><div class="line">  <span class="string">"org.scalaz"</span> %% <span class="string">"scalaz-http"</span> % <span class="string">"6.0.3"</span>,</div><div class="line">  <span class="string">"org.eclipse.jetty"</span> % <span class="string">"jetty-webapp"</span> % <span class="string">"9.1.0.v20131115"</span> % <span class="string">"container"</span>,</div><div class="line">  <span class="string">"org.eclipse.jetty"</span> % <span class="string">"jetty-plus"</span>   % <span class="string">"9.1.0.v20131115"</span> % <span class="string">"container"</span></div><div class="line">)</div><div class="line"></div><div class="line"><span class="function">seq</span>(com.earldouglas.xsbtwebplugin.WebPlugin.webSettings :_*)</div></pre></td></tr></table></figure>
+
+<p>I also changed the content of <em>build.properties</em> to ensure it reflects the correctly used version,</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">sbt.version</span>=<span class="string">0.13.1</span></div></pre></td></tr></table></figure>
+
+<p>And of course the content of <em>plugin.sbt</em> as below,</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">addSbtPlugin(<span class="string">"com.earldouglas"</span> % <span class="string">"xsbt-web-plugin"</span> % <span class="string">"0.7.0"</span>)</div></pre></td></tr></table></figure>
+
+<p>After all these are set up, the simple web application can be started via SBT. Of course, you need follow the instructions of the book to copy the content of <em>web.xml</em> and <em>index.html</em> and most importantly the file <em>weKanban.scala</em>. I’d ignore the first two and only list the content of the scala source file to illustrate its usage of Scalaz library in order to implement a simple Servlet,</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.kanban.application</div><div class="line"></div><div class="line"><span class="keyword">import</span> scalaz._</div><div class="line"><span class="keyword">import</span> Scalaz._</div><div class="line"><span class="keyword">import</span> scalaz.http._</div><div class="line"><span class="keyword">import</span> response._</div><div class="line"><span class="keyword">import</span> request._</div><div class="line"><span class="keyword">import</span> servlet._</div><div class="line"><span class="keyword">import</span> HttpServlet._</div><div class="line"><span class="keyword">import</span> Slinky._</div><div class="line"></div><div class="line"><span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">WeKanbanApplication</span> <span class="keyword">extends</span> <span class="title">StreamStreamServletApplication</span> </span>{</div><div class="line">	<span class="keyword">val</span> application = <span class="keyword">new</span> ServletApplication[Stream, Stream] {</div><div class="line">		<span class="keyword">def</span> application(implicit servlet: HttpServlet, servletRequest: HttpServletRequest, request: Request[Stream]) = {</div><div class="line">			<span class="keyword">def</span> found(x: Iterator[Byte]): Response[Stream] = OK &lt;&lt; x.toStream</div><div class="line">			HttpServlet.resource(found, NotFound.xhtml)</div><div class="line">		}</div><div class="line">	}</div><div class="line">}</div></pre></td></tr></table></figure>
+
+<p>So far so good. Given all the files are ready, we come to the third step: we can launch the web server now to show the result. Here the book author said ‘jetty-run’ command, I’d say it’s replaced with the command ‘container’ inside SBT like below, </p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&gt; <span class="symbol">container:</span>start</div><div class="line"><span class="number">2014</span>-<span class="number">03</span>-<span class="number">19</span> <span class="number">16</span><span class="symbol">:</span><span class="number">05</span><span class="symbol">:</span><span class="number">02</span>.091<span class="symbol">:INFO</span><span class="symbol">:oejs</span>.<span class="constant">Server</span><span class="symbol">:pool-</span><span class="number">6</span>-thread-<span class="number">4</span><span class="symbol">:</span> jetty-<span class="number">9.1</span>.<span class="number">0</span>.v20131115</div><div class="line"><span class="number">2014</span>-<span class="number">03</span>-<span class="number">19</span> <span class="number">16</span><span class="symbol">:</span><span class="number">05</span><span class="symbol">:</span><span class="number">03</span>.<span class="number">102</span><span class="symbol">:INFO</span><span class="symbol">:oejw</span>.<span class="constant">StandardDescriptorProcessor</span><span class="symbol">:pool-</span><span class="number">6</span>-thread-<span class="number">4</span><span class="symbol">:</span> <span class="constant">NO</span> <span class="constant">JSP</span> <span class="constant">Support</span> <span class="keyword">for</span> /, did <span class="keyword">not</span> find org.apache.jasper.servlet.<span class="constant">JspServlet</span></div><div class="line"><span class="number">2014</span>-<span class="number">03</span>-<span class="number">19</span> <span class="number">16</span><span class="symbol">:</span><span class="number">05</span><span class="symbol">:</span><span class="number">03</span>.<span class="number">106</span><span class="symbol">:INFO</span><span class="symbol">:oejsh</span>.<span class="constant">ContextHandler</span><span class="symbol">:pool-</span><span class="number">6</span>-thread-<span class="number">4</span><span class="symbol">:</span> <span class="constant">Started</span> o.e.j.w.<span class="constant">WebAppContext</span><span class="variable">@3d4dd7e7</span>{<span class="regexp">/,[file:/</span><span class="constant">Users</span>/admin/<span class="constant">Scala</span>/projects/weKanban/src/main/webapp/],<span class="constant">AVAILABLE</span>}</div><div class="line"><span class="number">2014</span>-<span class="number">03</span>-<span class="number">19</span> <span class="number">16</span><span class="symbol">:</span><span class="number">05</span><span class="symbol">:</span><span class="number">03</span>.<span class="number">174</span><span class="symbol">:INFO</span><span class="symbol">:oejs</span>.<span class="constant">ServerConnector</span><span class="symbol">:pool-</span><span class="number">6</span>-thread-<span class="number">4</span><span class="symbol">:</span> <span class="constant">Started</span> <span class="constant">ServerConnector</span><span class="variable">@4def267d</span>{<span class="constant">HTTP</span>/<span class="number">1.1</span>}{<span class="number">0</span>.<span class="number">0</span>.<span class="number">0</span>.<span class="number">0</span><span class="symbol">:</span><span class="number">8080</span>}</div><div class="line">[success] <span class="constant">Total</span> <span class="symbol">time:</span> <span class="number">1</span> s, completed <span class="number">2014</span>-<span class="number">3</span>-<span class="number">19</span> <span class="number">16</span><span class="symbol">:</span><span class="number">05</span><span class="symbol">:</span><span class="number">03</span></div></pre></td></tr></table></figure>
+
+<p>Finally let’s see the result:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$ curl -i localhost:8080/index.html</div><div class="line">HTTP/1.1 200 OK</div><div class="line">Content-Length: 85</div><div class="line">Server: Jetty(9.1.0.v20131115)</div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="title">html</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="title">body</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="title">h1</span>&gt;</span>weKanban board will come shortly<span class="tag">&lt;/<span class="title">h1</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="title">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="title">html</span>&gt;</span></div></pre></td></tr></table></figure>
+
+<p>OK, so I ended learning this chapter and learned some knowledge about Scala web development and SBT. The next step is to read the next chapter and complete this example for some useful user stories.</p>
+<h6 id="References">References</h6>
+<ul>
+<li><a href="http://www.scala-sbt.org/release/docs/Getting-Started/Setup.html" target="_blank" rel="external">How to setup SBT</a></li>
+<li><a href="https://github.com/earldouglas/xsbt-web-plugin/wiki" target="_blank" rel="external">xsbt web plugin</a></li>
+</ul>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+  
+  <div class="tags">
+    <a href="/tags/Scala/">Scala</a>, <a href="/tags/SBT/">SBT</a>
+  </div>
+
+        <div class="bdsharebuttonbox"><a href="#" class="bds_more" data-cmd="more"></a><a href="#" class="bds_qzone" data-cmd="qzone"></a><a href="#" class="bds_tsina" data-cmd="tsina"></a><a href="#" class="bds_tqq" data-cmd="tqq"></a><a href="#" class="bds_renren" data-cmd="renren"></a><a href="#" class="bds_weixin" data-cmd="weixin"></a></div>
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdPic":"","bdStyle":"0","bdSize":"16"},"share":{},"image":{"viewList":["qzone","tsina","tqq","renren","weixin"],"viewText":"分享到：","viewSize":"16"},"selectShare":{"bdContainerClass":null,"bdSelectMiniList":["qzone","tsina","tqq","renren","weixin"]}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+<section id="comment">
+
+<!-- Duoshuo Comment BEGIN -->
+	<div class="ds-thread"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"freelemon"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- Duoshuo Comment END -->
+
+</section>
+
+
+
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="Search">
+    <input type="hidden" name="q" value="site:hongbinzuo.github.io">
+  </form>
+</div>
+
+  
+
+  
+<div class="widget tagcloud">
+  <h3 class="title">Tag Cloud</h3>
+  <div class="entry">
+    <a href="/tags/Concurrency/" style="font-size: 10.00px;">Concurrency</a><a href="/tags/DI/" style="font-size: 11.67px;">DI</a><a href="/tags/Design-Patterns/" style="font-size: 16.67px;">Design Patterns</a><a href="/tags/Emacs/" style="font-size: 10.00px;">Emacs</a><a href="/tags/FP/" style="font-size: 10.00px;">FP</a><a href="/tags/Gradle/" style="font-size: 10.00px;">Gradle</a><a href="/tags/Groovy/" style="font-size: 10.00px;">Groovy</a><a href="/tags/IoC/" style="font-size: 10.00px;">IoC</a><a href="/tags/Java/" style="font-size: 18.33px;">Java</a><a href="/tags/Javascript/" style="font-size: 10.00px;">Javascript</a><a href="/tags/Misc/" style="font-size: 10.00px;">Misc</a><a href="/tags/Ruby/" style="font-size: 10.00px;">Ruby</a><a href="/tags/SBT/" style="font-size: 11.67px;">SBT</a><a href="/tags/Scala/" style="font-size: 20.00px;">Scala</a><a href="/tags/Spring/" style="font-size: 10.00px;">Spring</a><a href="/tags/algorithms/" style="font-size: 10.00px;">algorithms</a><a href="/tags/appfuse/" style="font-size: 11.67px;">appfuse</a><a href="/tags/blog/" style="font-size: 10.00px;">blog</a><a href="/tags/email/" style="font-size: 10.00px;">email</a><a href="/tags/favorites/" style="font-size: 10.00px;">favorites</a><a href="/tags/github/" style="font-size: 10.00px;">github</a><a href="/tags/grails/" style="font-size: 13.33px;">grails</a><a href="/tags/hexo/" style="font-size: 11.67px;">hexo</a><a href="/tags/maven/" style="font-size: 10.00px;">maven</a><a href="/tags/nodejs/" style="font-size: 10.00px;">nodejs</a><a href="/tags/play!/" style="font-size: 10.00px;">play!</a><a href="/tags/reading/" style="font-size: 15.00px;">reading</a><a href="/tags/test/" style="font-size: 11.67px;">test</a>
+  </div>
+</div>
+
+
+  <iframe width="100%" height="550" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=550&fansRow=2&ptype=1&speed=0&skin=1&isTitle=1&noborder=1&isWeibo=1&isFans=1&uid=1734417403&verifier=faa09416&dpc=1"></iframe>
+
+
+  <div class="widget tag">
+<h3 class="title">友情链接</h3>
+<ul class="entry">
+<li><a href="http://zipperary.com/" title="Zippera's Blog">Hexo作者博客</a></li>
+<li><a href="http://blog.csdn.net/happydeer/" title="陆其明的博客">豆巴陆其明</a></li>
+<li><a href="http://zhengyaotian.com/" title="Yaotian的博客">Yaotian</a></li>
+<li><a href="http://bobjiang.com/" title="Bob Jiang's Blog">Bob Jiang</a></li>
+<li><a href="http://youfei.github.io/" title="You fei's Blog">快乐的小伙伴儿</a></li>
+<li><a href="http://moonshadow778.github.io/" title="moonshadow">moonshadow778</a></li>
+</ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2014 Hongbin Zuo
+  
+  &nbsp;
+  <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1000271202'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "v1.cnzz.com/z_stat.php%3Fid%3D1000271202%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+</div>
+<div class="clearfix"></div>
+
+
+</footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F017d48b7d485850445707f9e552bfde4' type='text/javascript'%3E%3C/script%3E"));
+</script>
+</body>
+</html>
