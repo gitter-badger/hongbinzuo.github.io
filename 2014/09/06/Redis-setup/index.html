@@ -87,12 +87,14 @@
     </header>
     <div class="entry">
       
-        <p>Redis是一个非常流行的No-SQL数据库，在互联网网站的技术架构中应用相当广泛。这几天通过阅读《Redis in action》学习Redis，准备用博客简单记录一些有用信息，以供未来参考。第一篇是Redis的开发环境搭建，这里使用的是书中推荐的Python开发环境，整个搭建过程比较简单。</p>
-<p><em>*</em> 更新构建工具</p>
+        <p>Redis是一个非常流行的No-SQL数据库，在互联网网站的技术架构中应用相当广泛。这几天通过阅读《Redis in action》学习Redis，准备用博客简单记录一些有用的信息，以供未来参考。第一篇是Redis的开发环境搭建，这里使用的是书中推荐的Python开发环境，整个搭建过程比较简单。</p>
+<a id="more"></a>
+
+<h3 id="更新构建工具">更新构建工具</h3>
 <p>因为Redis是用C写的，我们将使用源码编译的方式安装Redis，所以可以使用如下命令（适用于Debian Linux）更新构建工具：</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ sudo apt-<span class="built_in">get</span> <span class="keyword">update</span></div><div class="line">$ sudo apt-<span class="built_in">get</span> install <span class="keyword">make</span> gcc <span class="keyword">python</span>-dev</div></pre></td></tr></table></figure>
 
-<p><em>*</em> 下载源码包并安装</p>
+<h3 id="下载源码包并安装">下载源码包并安装</h3>
 <p>从Redis官网下载最新稳定的安装包，如2.8.14并编译安装：</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="char">$ </span>wget <span class="method">http:</span>//download.redis.io/releases/redis-<span class="number">2.8</span><span class="number">.14</span>.tar.gz</div><div class="line"><span class="char">$ </span>tar xzf redis-<span class="number">2.8</span><span class="number">.14</span>.tar.gz</div><div class="line"><span class="char">$ </span>cd redis-<span class="number">2.8</span><span class="number">.14</span></div><div class="line"><span class="char">$ </span>make</div><div class="line"><span class="char">$ </span>sudo make install</div></pre></td></tr></table></figure>
 
@@ -102,10 +104,11 @@
 <p>我使用的操作系统是Ubuntu 14.04，系统已经默认安装了Python 2.7，所以只需要安装Redis的Python客户端开发库就可以了。我们使用Python的简易包安装工具<code>setuptools</code>来帮助我们安装。</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="char">$ </span>wget -q <span class="method">http:</span>//peak.telecommunity.com/dist/ez_setup.py</div><div class="line"><span class="char">$ </span>sudo python ez_setup.py</div><div class="line"><span class="char">$ </span>sudo python -m easy_install redis hiredis</div></pre></td></tr></table></figure>
 
+<h3 id="验证安装结果">验证安装结果</h3>
 <p>最后我们简单测试一下安装是否正常：</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="input"><span class="prompt">$ python</span></span></div><div class="line">Python 2.7.6 (default, Mar 22 2014, 22:59:56)</div><div class="line">[GCC 4.8.2] on linux2</div><div class="line">Type "help", "copyright", "credits" or "license" for more information.</div><div class="line">&gt;&gt;&gt; import redis</div><div class="line"><span class="input"><span class="prompt">&gt;&gt;&gt;</span> conn = redis.<span class="constant">Redis</span>()</span></div><div class="line"><span class="input"><span class="prompt">Create a connection to Redis.</span></span></div><div class="line">&gt;&gt;&gt; conn.set(<span class="string">'hello'</span>, <span class="string">'world'</span>)</div><div class="line"><span class="input"><span class="prompt">True</span></span></div><div class="line">&gt;&gt;&gt; conn.get(<span class="string">'hello'</span>)</div><div class="line"><span class="constant">Get</span> the value</div><div class="line"><span class="string">'world'</span></div></pre></td></tr></table></figure>
 
-<p>至此，Redis服务器和Python开发环境搭建成功。</p>
+<p>一切OK。至此，Redis服务器和Python开发环境搭建成功。</p>
 
       
     </div>
