@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   
-  <title>IoC | Freelemon&#39;s open world</title>
+  <title>Redis | Freelemon&#39;s open world</title>
   <meta name="author" content="Hongbin Zuo">
   
   <meta name="description" content="Think before write.">
@@ -60,7 +60,7 @@
 </header>
   <div id="content" class="inner">
     <div id="main-col" class="alignleft"><div id="wrapper">
-<h2 class="archive-title tag">IoC</h2>
+<h2 class="archive-title tag">Redis</h2>
 
 
   
@@ -82,27 +82,40 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2013-11-22T14:43:57.000Z"><a href="/2013/11/22/ioc-and-di-intro/">Nov 22 2013</a></time>
+        <time datetime="2014-09-06T03:42:09.000Z"><a href="/2014/09/06/Redis-setup/">Sep 6 2014</a></time>
       
       
   
-    <h1 class="title"><a href="/2013/11/22/ioc-and-di-intro/">IoC and DI intro</a></h1>
+    <h1 class="title"><a href="/2014/09/06/Redis-setup/">Redis setup</a></h1>
   
 
     </header>
     <div class="entry">
       
-        <h2 id="控制反转与依赖注入导读">控制反转与依赖注入导读</h2>
-<p>早年参加工作的时候，大家普遍说，不一定要掌握那么多语言细节，也不一定要学那么多语言，需要的时候查查书、上上网就行了，重要的是“编程思想”。好高级啊！“编程思想”这个当年流行的词儿似乎代表着“高端大气上档次”，似乎意味着掌握编程思想的人都是码农界的高富帅。呃，编程思想，嘛玩意儿？难道就是一系列系统的想法精粹，就像《毛泽东思想》吗？好像不是。后来捧读了巨著《C++编程思想》和《Java编程思想》，也没窥透所谓的思想。后来才觉着，在编程界，英文里可能就不存在思想的准确对应词吧？Idea？Thought？Thinking？Ideology？都不像。</p>
-<p>最近在看<a href="http://book.douban.com/subject/24841235/" target="_blank" rel="external">《Java程序员修炼之道》</a>（我最近是迷上各种“道”了），其中提到了DIP，又激起我重新厘清编程思想的机会。现在想来，编程，或者说程序设计的思想，应该可以归在设计方法学之下，即有了某种方法，按照这种方法去思考问题、构建软件和设计程序，就是这种方法的思想，比如面向过程的设计思想，或面向对象的设计思想。现在，我们也可以说面向组件的设计思想，或者是面向云的设计思想，甚至是用户体验至上的设计思想。我们不自觉地从“编程”思想演进到“设计”思想了，思想总算正本清源，设计需要思想，而编程只是设计的结果。设计在哪儿？设计无处不在。软件设计从需求获取阶段就已经开始，直到程序员编写每一行代码都贯穿始终，只是体现在设计的不同层面而已。所以，程序员的80%的工作都是在设计（Think&amp;Design），而只有20%的时间是在编程（Programming）。<br>
+        <p>Redis是一个非常流行的No-SQL数据库，在互联网网站的技术架构中应用相当广泛。这几天通过阅读《Redis in action》学习Redis，准备用博客简单记录一些有用信息，以供未来参考。第一篇是Redis的开发环境搭建，这里使用的是书中推荐的Python开发环境，整个搭建过程比较简单。</p>
+<p><em>*</em> 更新构建工具</p>
+<p>因为Redis是用C写的，我们将使用源码编译的方式安装Redis，所以可以使用如下命令（适用于Debian Linux）更新构建工具：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ sudo apt-<span class="built_in">get</span> <span class="keyword">update</span></div><div class="line">$ sudo apt-<span class="built_in">get</span> install <span class="keyword">make</span> gcc <span class="keyword">python</span>-dev</div></pre></td></tr></table></figure>
+
+<p><em>*</em> 下载源码包并安装</p>
+<p>从Redis官网下载最新稳定的安装包，如2.8.14并编译安装：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="char">$ </span>wget <span class="method">http:</span>//download.redis.io/releases/redis-<span class="number">2.8</span><span class="number">.14</span>.tar.gz</div><div class="line"><span class="char">$ </span>tar xzf redis-<span class="number">2.8</span><span class="number">.14</span>.tar.gz</div><div class="line"><span class="char">$ </span>cd redis-<span class="number">2.8</span><span class="number">.14</span></div><div class="line"><span class="char">$ </span>make</div><div class="line"><span class="char">$ </span>sudo make install</div></pre></td></tr></table></figure>
+
+<p>安装完成之后，启动Redis：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ redis-server redis.<span class="keyword">conf</span></div></pre></td></tr></table></figure>
+
+<p>我使用的操作系统是Ubuntu 14.04，系统已经默认安装了Python 2.7，所以只需要安装Redis的Python客户端开发库就可以了。我们使用Python的简易包安装工具<code>setuptools</code>来帮助我们安装。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="char">$ </span>wget -q <span class="method">http:</span>//peak.telecommunity.com/dist/ez_setup.py</div><div class="line"><span class="char">$ </span>sudo python ez_setup.py</div><div class="line"><span class="char">$ </span>sudo python -m easy_install redis hiredis</div></pre></td></tr></table></figure>
+
+<p>最后我们简单测试一下安装是否正常：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="input"><span class="prompt">$ python</span></span></div><div class="line">Python 2.7.6 (default, Mar 22 2014, 22:59:56)</div><div class="line">[GCC 4.8.2] on linux2</div><div class="line">Type "help", "copyright", "credits" or "license" for more information.</div><div class="line">&gt;&gt;&gt; import redis</div><div class="line"><span class="input"><span class="prompt">&gt;&gt;&gt;</span> conn = redis.<span class="constant">Redis</span>()</span></div><div class="line"><span class="input"><span class="prompt">Create a connection to Redis.</span></span></div><div class="line">&gt;&gt;&gt; conn.set(<span class="string">'hello'</span>, <span class="string">'world'</span>)</div><div class="line"><span class="input"><span class="prompt">True</span></span></div><div class="line">&gt;&gt;&gt; conn.get(<span class="string">'hello'</span>)</div><div class="line"><span class="constant">Get</span> the value</div><div class="line"><span class="string">'world'</span></div></pre></td></tr></table></figure>
+
+<p>至此，Redis服务器和Python开发环境搭建成功。</p>
+
       
     </div>
     <footer>
       
-        
-          <div class="alignleft">
-            <a href="/2013/11/22/ioc-and-di-intro/#more" class="more-link">Read More</a>
-          </div>
         
         
       
