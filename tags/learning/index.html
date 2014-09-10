@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Scala patterns (#6) - Kestrel combinator | Freelemon&#39;s open world</title>
+  <title>learning | Freelemon&#39;s open world</title>
   <meta name="author" content="Hongbin Zuo">
   
   <meta name="description" content="Think before write.">
@@ -11,7 +11,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <meta property="og:title" content="Scala patterns (#6) - Kestrel combinator"/>
+  
   <meta property="og:site_name" content="Freelemon&#39;s open world"/>
 
   
@@ -59,7 +59,12 @@
 <div class="clearfix"></div>
 </header>
   <div id="content" class="inner">
-    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+    <div id="main-col" class="alignleft"><div id="wrapper">
+<h2 class="archive-title tag">learning</h2>
+
+
+  
+    <article class="post">
   
     <div class="gallery">
   <div class="photoset">
@@ -77,37 +82,28 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2014-03-04T04:25:31.000Z"><a href="/2014/03/04/kestrel-combinator/">Mar 4 2014</a></time>
+        <time datetime="2014-09-10T15:29:54.000Z"><a href="/2014/09/10/Top-8-free-readings/">Sep 10 2014</a></time>
       
       
   
-    <h1 class="title">Scala patterns (#6) - Kestrel combinator</h1>
+    <h1 class="title"><a href="/2014/09/10/Top-8-free-readings/">Top 8 free readings</a></h1>
   
 
     </header>
     <div class="entry">
       
-        <p>Kestrel combinator并不是一种传统的设计模式，这个叫法是在1985年出版的<em>To Mock the Mockingbird</em>这本书里提到的，可以参考<em>Scala in action</em>作者引用的<a href="http://mng.bz/WKns" target="_blank" rel="external">资源地址</a>详细了解这种模式，其中的例子使用的是Ruby语言。我理解这种模式的意义主要是产生<strong>副作用</strong>，即在不改变原有类或对象定义的情况下，使用一段附加函数体来达到产生副作用的目的。</p>
-<a id="more"></a>
-
-<p>这种模式在不同的语言里实现的方式也不一样。下面的一个例子来自<em>Scala in action</em>，其中使用了Scala的隐式转换（Implicit Conversion）特性来实现Kestrel combinator：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="class"><span class="keyword">object</span> <span class="title">Combinators</span> </span>{</div><div class="line">  implicit <span class="keyword">def</span> kestrel[A](a: A) = <span class="keyword">new</span> {</div><div class="line">    <span class="keyword">def</span> tap(sideEffect: A =&gt; Unit): A = {</div><div class="line">      sideEffect(a)</div><div class="line">      a</div><div class="line">    }</div><div class="line">  }</div><div class="line">}</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">case</span> <span class="keyword">class</span> <span class="title">Person</span><span class="params">(firstName: String, lastName: String)</span></span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">case</span> <span class="keyword">class</span> <span class="title">Mailer</span><span class="params">(mailAddress: String)</span> </span>{</div><div class="line">  <span class="keyword">def</span> mail(body: String) = { println(<span class="string">"Send mail here"</span> )}</div><div class="line">}</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">object</span> <span class="title">DemoKestrel</span> <span class="keyword">extends</span> <span class="title">App</span> </span>{</div><div class="line">  <span class="keyword">import</span> Combinators._</div><div class="line">  Person(<span class="string">"Nilanjan"</span>, <span class="string">"Raychaudhuri"</span>).tap(</div><div class="line">      p =&gt; {</div><div class="line">        println(<span class="string">"First name"</span> + p.firstName)</div><div class="line">        Mailer(<span class="string">"Some address"</span>)</div><div class="line">      }</div><div class="line">  ).lastName </div><div class="line">}</div></pre></td></tr></table></figure>
-
-<p>这种模式具体用在什么场景下呢？再让我想想。。</p>
+        <p>这是一个“信息大爆炸”的时代，在没有互联网的时候说这句话可能有人会怀疑，但是有了互联网之后大家都笃信不疑。根据加州大学圣地亚哥分校的研究，一个典型的美国家庭在2008年平均收到3.6 ZB的信息，每人每天平均收到34 GB的信息，这只是2008年的研究结果，有人预测，每5年全世界的信息总量就会增加10倍。网络新闻、社交网络、邮箱、电视以及各种媒体每天都充斥你的左右，你是否也有信息焦虑症和选择困难症呢？</p>
 
       
     </div>
     <footer>
       
         
+          <div class="alignleft">
+            <a href="/2014/09/10/Top-8-free-readings/#more" class="more-link">Read More</a>
+          </div>
         
-  
-  <div class="tags">
-    <a href="/tags/Scala/">Scala</a>, <a href="/tags/Design-Patterns/">Design Patterns</a>
-  </div>
-
-        <div class="bdsharebuttonbox"><a href="#" class="bds_more" data-cmd="more"></a><a href="#" class="bds_qzone" data-cmd="qzone"></a><a href="#" class="bds_tsina" data-cmd="tsina"></a><a href="#" class="bds_tqq" data-cmd="tqq"></a><a href="#" class="bds_renren" data-cmd="renren"></a><a href="#" class="bds_weixin" data-cmd="weixin"></a></div>
-<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdPic":"","bdStyle":"0","bdSize":"16"},"share":{},"image":{"viewList":["qzone","tsina","tqq","renren","weixin"],"viewText":"分享到：","viewSize":"16"},"selectShare":{"bdContainerClass":null,"bdSelectMiniList":["qzone","tsina","tqq","renren","weixin"]}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+        
       
       <div class="clearfix"></div>
     </footer>
@@ -116,28 +112,13 @@
 
 
 
-<section id="comment">
+  
 
-<!-- Duoshuo Comment BEGIN -->
-	<div class="ds-thread"></div>
-<script type="text/javascript">
-var duoshuoQuery = {short_name:"freelemon"};
-	(function() {
-		var ds = document.createElement('script');
-		ds.type = 'text/javascript';ds.async = true;
-		ds.src = 'http://static.duoshuo.com/embed.js';
-		ds.charset = 'UTF-8';
-		(document.getElementsByTagName('head')[0] 
-		|| document.getElementsByTagName('body')[0]).appendChild(ds);
-	})();
-	</script>
-<!-- Duoshuo Comment END -->
-
-</section>
-
-
-
-
+  <nav id="pagination">
+  
+  
+  <div class="clearfix"></div>
+</nav>
 </div></div>
     <aside id="sidebar" class="alignright">
   <div class="search">
